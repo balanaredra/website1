@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;height:100vh;width:100vw;
+  display:flex;justify-content:center;align-items:center;
+  background:linear-gradient(-45deg,#0f0c29,#302b63,#24243e,#41295a);
+  background-size:400% 400%;animation:bgMove 15s ease infinite;
+  overflow:hidden;font-family:"Segoe UI",sans-serif;color:#fff;
+}
+@keyframes bgMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.stars{position:absolute;inset:0;background:
+ radial-gradient(1px 1px at 20% 30%, white, transparent),
+ radial-gradient(1px 1px at 80% 40%, white, transparent),
+ radial-gradient(1px 1px at 50% 70%, white, transparent),
+ radial-gradient(1px 1px at 10% 90%, white, transparent),
+ radial-gradient(1px 1px at 90% 10%, white, transparent);
+ background-size:300px 300px;animation:starsMove 40s linear infinite;opacity:.6;z-index:0;}
+@keyframes starsMove{to{background-position:-1000px 1000px}}
+
+.mist{position:absolute;inset:-20%;background:
+ radial-gradient(circle at 30% 40%, rgba(255,255,255,.08), transparent 60%),
+ radial-gradient(circle at 70% 60%, rgba(255,255,255,.06), transparent 65%);
+ animation:mistMove 25s ease-in-out infinite alternate;z-index:1;}
+@keyframes mistMove{to{transform:translateX(5%)}}
+
+.heart{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+ font-size:90px;cursor:pointer;animation:pulse 1.2s infinite;z-index:10;}
+@keyframes pulse{50%{transform:translate(-50%,-50%) scale(1.2)}}
+.zoomFill{animation:zoomFill 1.2s ease-in forwards;}
+@keyframes zoomFill{to{transform:translate(-50%,-50%) scale(30)}}
+
+.card{position:relative;width:100%;height:100%;padding:40px 25px;text-align:center;
+ opacity:0;transform:scale(.9);transition:1s ease;z-index:5;}
+.card.show{opacity:1;transform:scale(1);}
+#name{font-size:2rem;color:#ff9acb;min-height:45px;text-shadow:0 0 8px #ff9acb,0 0 15px #ff9acb;}
+#text{margin-top:15px;font-size:1.1rem;line-height:1.7;min-height:120px;text-shadow:0 0 6px #ff9acb;}
+
+.photo-wrap{position:relative;width:220px;height:220px;margin:30px auto;}
+.rays{position:absolute;inset:-40px;background:repeating-conic-gradient(rgba(255,154,203,.15) 0deg 10deg,transparent 10deg 20deg);
+ filter:blur(12px);animation:raySpin 20s linear infinite;opacity:.6;}
+@keyframes raySpin{to{transform:rotate(360deg)}}
+.photo{position:relative;width:200px;height:200px;border-radius:50%;overflow:hidden;margin:auto;
+ border:5px solid #ff9acb;filter:blur(10px);transition:2s ease;z-index:2;}
+.photo.reveal{filter:blur(0);}
+.photo img{width:100%;height:100%;object-fit:cover;}
+
+.particle{position:absolute;font-size:18px;animation:float 3s linear forwards;opacity:.8;}
+@keyframes float{to{transform:translateY(-120vh);opacity:0}}
+
+.confetti{position:absolute;width:8px;height:14px;animation:confettiFall 4s linear forwards;}
+@keyframes confettiFall{to{transform:translateY(-120vh) rotate(720deg);opacity:0;}}
+
+#finalWish{position:absolute;bottom:30px;width:100%;text-align:center;font-size:2rem;color:#ffd1dc;
+ opacity:0;animation:fadeWish 3s ease forwards 2s, pulseWish 2s infinite alternate 5s;}
+@keyframes fadeWish{to{opacity:1}}
+@keyframes pulseWish{to{transform:scale(1.1)}}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="mist"></div>
+
+<!-- Heart button -->
+<div class="heart" id="heart" onclick="start()">❤️</div>
+
+<!-- Card with name, text, photo -->
+<div class="card" id="card">
+  <div id="name"></div>
+  <div id="text"></div>
+  <div class="photo-wrap">
+    <div class="rays"></div>
+    <div class="photo" id="photo"><img src="photo.jpg"></div>
+  </div>
+</div>
+
+<!-- Final wish -->
+<div id="finalWish">Happy Birthday Potti💖</div>
+
+<!-- Background music -->
+<audio id="music" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const personName="My Beautiful Girl ";
+const message="You are not just special today ✨ You are special every single day 🎊 Your smile lights up my darkest nights, and your presence makes everything feel complete 💫";
+let n=0,i=0;
+
+function start(){
+  const heart=document.getElementById("heart");
+  heart.classList.add("zoomFill");
+  setTimeout(()=>{
+    heart.style.display="none";
+    document.getElementById("card").classList.add("show");
+    const music=document.getElementById("music");
+    music.play().catch(()=>{}); // prevent audio error
+    fadeMusic();
+    typeName();
+  },1200);
+}
+
+function typeName(){
+  if(n<personName.length){
+    document.getElementById("name").innerHTML+=personName.charAt(n++);
+    setTimeout(typeName,90);
+  }else{
+    setTimeout(typeText,600);
+  }
+}
+
+function typeText(){
+  if(i<message.length){
+    document.getElementById("text").innerHTML+=message.charAt(i++);
+    spawnHeart();
+    setTimeout(typeText,40);
+  }else{
+    document.getElementById("photo").classList.add("reveal");
+    launchConfetti();
+  }
+}
+
+function spawnHeart(){
+  const h=document.createElement("div");
+  h.className="particle";
+  h.innerHTML="💗";
+  h.style.left=Math.random()*100+"vw";
+  h.style.top="100vh";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),3000);
+}
+
+function launchConfetti(){
+  for(let j=0;j<100;j++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.top="100vh";
+    c.style.background=`hsl(${Math.random()*360},100%,70%)`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  }
+}
+
+function fadeMusic(){
+  const music=document.getElementById("music");
+  let vol=0;
+  music.volume=0;
+  const fade=setInterval(()=>{
+    if(vol<1){
+      vol+=0.05;
+      music.volume=vol;
+    }else{
+      clearInterval(fade);
+    }
+  },200);
+}
+</script>
+</body>
+</html>
